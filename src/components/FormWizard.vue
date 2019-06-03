@@ -1,24 +1,34 @@
 <template>
   <div>
-    <!-- dnyamic component wizard -->
-    <keep-alive>
-      <component :is="currentStep" @update="processStep" :wizard-data="form" ref="currentStep"></component>
-    </keep-alive>
-    <!-- progress bar -->
-    <div class="progress-bar">
-      <div :style="`width: ${progress}%;`"></div>
+    <div v-if="wizardInProgress">
+      <!-- dnyamic component wizard -->
+      <keep-alive>
+        <component :is="currentStep" @update="processStep" :wizard-data="form" ref="currentStep"></component>
+      </keep-alive>
+      <!-- progress bar -->
+      <div class="progress-bar">
+        <div :style="`width: ${progress}%;`"></div>
+      </div>
+      <!-- Actions -->
+      <div class="buttons">
+        <button @click="goBack" v-if="currentStepNumber > 1" class="btn-outlined">Back</button>
+        <button @click="nextButtonAction" class="btn" :disabled ="!canGoNext">{{ isLastStep ? 'Complete Order' : 'Next' }}</button>
+      </div>
+      <!-- debugging object -->
+      <pre><code>{{form}}</code></pre>
     </div>
-    <!-- Actions -->
-    <div class="buttons">
-      <button @click="goBack" v-if="currentStepNumber > 1" class="btn-outlined">Back</button>
-      <button @click="goNext" class="btn" :disabled ="!canGoNext">Next</button>
+    <div v-else>
+      <h1 class="title">Thank you!</h1>
+      <h2 class="subtitle">We look forward to shipping you your first box</h2>
+      <p class="text-center">
+        <a href="#" target="_blank" class="btn">Go somewhere cool!</a>
+      </p>
     </div>
-    <!-- debugging object -->
-    <pre><code>{{form}}</code></pre>
   </div>
 </template>
 
 <script>
+  import {postFormToDB} from '../api'
   import FormPlanPicker from './FormPlanPicker'
   import FormUserDetails from './FormUserDetails'
   import FormAddress from './FormAddress'
@@ -60,7 +70,16 @@
       },
       progress () {
         return this.currentStepNumber/this.length * 100
+      },
+      // validating the last Step
+      isLastStep() {
+        return this.currentStepNumber === this.length
+      },
+      // wizardToProgress
+      wizardInProgress() {
+        return this.currentStepNumber <= this.length
       }
+
     },
     methods: {
       // receiving emmit process
@@ -86,7 +105,20 @@
           this.canGoNext = !this.$refs.currentStep.$v.$invalid
           // this.$refs.currentStep.submit() // called after each NEXT event
         })
+      },
+      submitOrder() {
+          postFormToDB(this.form).then(() => {
+            console.log('form submitted', this.form)
+            this.currentStepNumber++ // forcing Completion
+          })
+      },
+      nextButtonAction() {
+        if(this.isLastStep){
+          this.submitOrder()
+        } else {
+          this.goNext()
+        }
       }
-    }
+     }
 }
 </script>
