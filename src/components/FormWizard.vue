@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="wizardInProgress" v-show="asyncSate !== 'pending'">
+    <div v-if="wizardInProgress" v-show="asyncState !== 'pending'">
       <!-- dnyamic component wizard -->
       <keep-alive>
         <component :is="currentStep" @update="processStep" :wizard-data="form" ref="currentStep"></component>
@@ -26,7 +26,7 @@
     </div>
 
     <!-- loading element -->
-    <div class="loading-warapper" v-if="async-state === 'pending'">
+    <div class="loading-warapper" v-if="asyncState === 'pending'">
       <div class="loader">
         <img src="/spinner.svg" alt="">
         <p>Please wait, we're hitting our servers!</p>
