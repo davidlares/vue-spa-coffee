@@ -58,15 +58,15 @@
     methods: {
       // This method will be triggered when the form is submitted
       submit() {
-        // checking if not invalid
-        if(!this.$v.$invalid) {
           // emmiting submited info
           this.$emit('update', {
-            email: this.form.email,
-            password: this.form.password,
-            name: this.form.name
+            data: {
+              email: this.form.email,
+              password: this.form.password,
+              name: this.form.name
+              },
+              valid: !this.$v.$invalid
           })
-        }
       }
     }
   }

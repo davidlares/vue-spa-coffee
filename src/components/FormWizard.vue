@@ -1,7 +1,9 @@
 <template>
   <div>
     <!-- dnyamic component wizard -->
-    <component :is="currentStep" @update="processStep" :wizard-data="form"></component>
+    <keep-alive>
+      <component :is="currentStep" @update="processStep" :wizard-data="form"></component>
+    </keep-alive>
     <!-- progress bar -->
     <div class="progress-bar">
       <div :style="`width: ${progress}%;`"></div>
@@ -62,14 +64,15 @@
     },
     methods: {
       // receiving emmit process
-      processStep(stepData){
+      processStep(step){
         // Object assign copies the whole properties of a object to another
-        Object.assign(this.form, stepData) // payload
+        Object.assign(this.form, step.data) // payload
         // wizard Next validator
-        this.canGoNext = true
+        this.canGoNext = step.valid
       },
       goBack () {
         this.currentStepNumber--
+        this.canGoNext = true
       },
       goNext () {
         this.currentStepNumber++

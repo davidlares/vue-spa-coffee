@@ -45,14 +45,14 @@
     },
     methods: {
       submit() {
-        // checking if not invalid
-        if(!this.$v.$invalid) {
-          // emmiting submited info
-          this.$emit('update', {
+        // emmiting submited info
+        this.$emit('update', {
+          data: {
             recipient: this.form.recipient,
             address: this.form.address,
-          })
-        }
+          },
+          valid: !this.$v.$invalid // sending the validation through the emit object (works for wizard back button)
+        })
       }
     },
     props: {
