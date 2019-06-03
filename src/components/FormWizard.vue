@@ -1,11 +1,7 @@
 <template>
   <div>
-    <!-- wizard -->
-    <FormPlanPicker v-if="currentStepNumber === 1" @update="processStep"/>
-    <FormUserDetails v-if="currentStepNumber === 2" @update="processStep"/>
-    <!-- handling props for summary-->
-    <FormAddress v-if="currentStepNumber === 3" @update="processStep" :wizard-data="form"/>
-    <FormReviewOrder v-if="currentStepNumber === 4" @update="processStep" :wizard-data="form"/>
+    <!-- dnyamic component wizard -->
+    <component :is="currentStep" @update="processStep" :wizard-data="form"></component>
     <!-- progress bar -->
     <div class="progress-bar">
       <div :style="`width: ${progress}%;`"></div>
@@ -37,7 +33,8 @@
       return {
         currentStepNumber: 1,
         canGoNext: false,
-        length: 4,
+        // dynamic forms steps
+        steps: ['FormPlanPicker', 'FormUserDetails','FormAddress', 'FormReviewOrder'],
         form: {
           plan: null,
           email: null,
@@ -51,6 +48,14 @@
       }
     },
     computed: {
+      // setting the steps as computed props
+      length() {
+        return this.steps.length
+      },
+      // the actual step will be a computed prop
+      currentStep() {
+        return this.steps[this.currentStepNumber - 1]
+      },
       progress () {
         return this.currentStepNumber/this.length * 100
       }
