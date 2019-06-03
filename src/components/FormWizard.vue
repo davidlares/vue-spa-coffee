@@ -2,7 +2,7 @@
   <div>
     <!-- dnyamic component wizard -->
     <keep-alive>
-      <component :is="currentStep" @update="processStep" :wizard-data="form"></component>
+      <component :is="currentStep" @update="processStep" :wizard-data="form" ref="currentStep"></component>
     </keep-alive>
     <!-- progress bar -->
     <div class="progress-bar">
@@ -77,7 +77,15 @@
       goNext () {
         this.currentStepNumber++
         // wizard Next validator
-        this.canGoNext = false
+        // this.canGoNext = false
+        // using refs to persist updated data more than one step back
+
+        // executes after the next DOM update cycle
+        this.$nextTick(() => {
+          // using prev solution with Vuelidate
+          this.canGoNext = !this.$refs.currentStep.$v.$invalid
+          // this.$refs.currentStep.submit() // called after each NEXT event
+        })
       }
     }
 }

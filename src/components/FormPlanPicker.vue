@@ -79,6 +79,15 @@
           },
           valid: !this.$v.$invalid // always true
         })
+      },
+
+      submit() {
+        this.$emit('update', {
+          data: {
+            plan: this.selectedPlan
+          },
+          valid: !this.$v.$invalid
+        })
       }
     }
   }
