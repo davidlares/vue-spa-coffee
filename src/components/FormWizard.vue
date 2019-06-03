@@ -3,7 +3,7 @@
     <div v-if="wizardInProgress" v-show="asyncState !== 'pending'">
       <!-- dnyamic component wizard -->
       <keep-alive>
-        <component :is="currentStep" @update="processStep" :wizard-data="form" ref="currentStep"></component>
+        <component :is="currentStep" @update="processStep" :wizard-data="form" ref="currentStep" @updateAsyncState="updateAsyncState"></component>
       </keep-alive>
       <!-- progress bar -->
       <div class="progress-bar">
@@ -26,7 +26,7 @@
     </div>
 
     <!-- loading element -->
-    <div class="loading-warapper" v-if="asyncState === 'pending'">
+    <div class="loading-wrapper" v-if="asyncState === 'pending'">
       <div class="loader">
         <img src="/spinner.svg" alt="">
         <p>Please wait, we're hitting our servers!</p>
@@ -98,6 +98,9 @@
         Object.assign(this.form, step.data) // payload
         // wizard Next validator
         this.canGoNext = step.valid
+      },
+      updateAsyncState(state) {
+        this.asyncState = state
       },
       goBack () {
         this.currentStepNumber--

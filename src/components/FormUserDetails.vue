@@ -91,21 +91,25 @@
           })
       },
       checkIfUserExists() {
+        this.$emit('updateAsyncState', 'pending')
         if(!this.$v.form.email.$invalid){
           return checkIfUserExistsInDB(this.form.email)
             .then(() => {
               // user exists
               this.existingUser = true
               this.emailCheckedInDB = true
+              this.$emit('updateAsyncState', 'success')
             })
             .catch(() => {
               // does not exist
               this.existingUser = false
               this.emailCheckedInDB = true
+              this.$emit('updateAsyncState', 'success')
             })
         }
       },
       login() {
+        this.$emit('updateAsyncState', 'pending')
         this.wrongPassword = false
         if(!this.$v.form.password.$invalid) {
           return authenticateUser(this.form.email, this.form.password)
@@ -113,10 +117,12 @@
               // logged in
               this.form.name = user.name
               this.submit()
+              this.$emit('updateAsyncState', 'success')
             })
             .catch(() => {
               // wrong password
               this.wrongPassword = true
+              this.$emit('updateAsyncState', 'success')
             })
         }
       },
