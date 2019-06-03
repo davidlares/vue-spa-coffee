@@ -43,6 +43,16 @@
         }
       }
     },
+    // with a previous keep alive - watch sets a listener every time a value changes
+    // watch: {
+    //   'wizardData.name' (value) {
+    //     this.form.recipient = value
+    //   }
+    // },
+    // Vue hook
+    activated(){
+      this.form.recipient = this.wizardData.name
+    },
     methods: {
       submit() {
         // emmiting submited info
