@@ -15,7 +15,7 @@
         <button @click="nextButtonAction" class="btn" :disabled ="!canGoNext">{{ isLastStep ? 'Complete Order' : 'Next' }}</button>
       </div>
       <!-- debugging object -->
-      <pre><code>{{form}}</code></pre>
+      <!-- <pre><code>{{form}}</code></pre> -->
     </div>
     <div v-else>
       <h1 class="title">Thank you!</h1>
